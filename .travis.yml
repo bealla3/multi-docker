@@ -9,10 +9,10 @@ script:
   - docker run artbeall/react-test npm test -- --coverage
 
 after_success:
-  - docker build -t artbeall/multi-client -f ./client
-  - docker build -t artbeall/multi-nginx -f ./nginx
-  - docker build -t artbeall/multi-server -f ./server
-  - docker build -t artbeall/multi-worker -f ./worker
+  - docker build -t artbeall/multi-client ./client
+  - docker build -t artbeall/multi-nginx ./nginx
+  - docker build -t artbeall/multi-server ./server
+  - docker build -t artbeall/multi-worker ./worker
   #Log in to the docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   #take those images and push them into docker hub
