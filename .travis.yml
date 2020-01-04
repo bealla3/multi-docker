@@ -1,0 +1,22 @@
+sudo: required
+service:
+  - docker
+
+before_install:
+  - docker build -t artbeall/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run artbeall/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t artbeall/multi-client -f ./client
+  - docker build -t artbeall/multi-nginx -f ./nginx
+  - docker build -t artbeall/multi-server -f ./server
+  - docker build -t artbeall/multi-worker -f ./worker
+  #Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  #take those images and push them into docker hub
+  - docker push artbeall/multi-client
+  - docker push artbeall/multi-nginx
+  - docker push artbeall/multi-server
+  - docker push artbeall/multi-worker
